@@ -3,11 +3,16 @@ import torch
 import numpy as np
 from ultralytics import YOLO
 import time
+import os
 
 def inference_node():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Starting Inference Node on {device}...")
-    model = YOLO("model/yolo11m.pt")
+
+
+    dir = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(dir, "..", "model", "yolo11m.pt")
+    model = YOLO(model_path)
 
     # Warmup
     dummy_input = np.zeros((720, 1280, 3), dtype=np.uint8)
@@ -18,7 +23,9 @@ def inference_node():
     gst_in = (
         "udpsrc port=5000 ! "
         "application/x-rtp, media=video, clock-rate=90000, encoding-name=JPEG, payload=26 ! "
-        "rtpjpegdepay ! jpegdec ! videoconvert ! appsink"
+        "rtpjpegdepay ! jpegdec ! videoconvert ! "
+        "video/x-raw, format=BGR, width=1280, height=720 ! "
+        "appsink drop=true sync=false"
     )
     cap = cv.VideoCapture(gst_in, cv.CAP_GSTREAMER)
 
@@ -39,10 +46,13 @@ def inference_node():
             while True:
                 ret, frame = cap.read()
                 if not ret:
+                    print("Waiting for camera data... (Is 1_capture.py running?)")
+                    time.sleep(1.0)
                     continue # Keep trying if the stream drops for a microsecond
                 print(cap)
                 
                 # Run YOLO Inference
+                # print("Inference running...)")
                 results = model.predict(
                     source=frame, 
                     device=device, 
