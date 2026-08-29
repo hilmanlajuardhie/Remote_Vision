@@ -15,26 +15,31 @@ def inference_node():
     model = YOLO(model_path)
 
     # Warmup
-    dummy_input = np.zeros((720, 1280, 3), dtype=np.uint8)
+    dummy_input = np.zeros((480, 640, 3), dtype=np.uint8)
     for _ in range(3):
-        model.predict(source=dummy_input, device=device, verbose=False, quantize=16)
+        model.predict(
+            source=dummy_input, 
+            device=device, 
+            verbose=False, 
+            quantize="fp16"
+        )
 
     # GStreamer pipeline receiving from Port 5000
     gst_in = (
-        "udpsrc port=5000 ! "
-        "application/x-rtp, media=video, clock-rate=90000, encoding-name=JPEG, payload=26 ! "
+        "udpsrc port=5000 caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)JPEG, payload=(int)26\" ! "
         "rtpjpegdepay ! jpegdec ! videoconvert ! "
-        "video/x-raw, format=BGR, width=1280, height=720 ! "
+        "video/x-raw, format=BGR ! "
         "appsink drop=true sync=false"
     )
     cap = cv.VideoCapture(gst_in, cv.CAP_GSTREAMER)
 
     # GStreamer pipeline sending to Port 5001
     gst_out = (
-        "appsrc ! videoconvert ! jpegenc ! rtpjpegpay ! "
+        "appsrc ! video/x-raw,format=BGR,width=640,height=480,framerate=60/1 ! "
+        "videoconvert ! jpegenc ! rtpjpegpay ! "
         "udpsink host=127.0.0.1 port=5001"
     )
-    out = cv.VideoWriter(gst_out, cv.CAP_GSTREAMER, 0, 60, (1280, 720))
+    out = cv.VideoWriter(gst_out, cv.CAP_GSTREAMER, 0, 60, (640, 480))
 
     frame_count = 0
     fps_display = 0.0
@@ -47,7 +52,9 @@ def inference_node():
                 ret, frame = cap.read()
                 if not ret:
                     print("Waiting for camera data... (Is 1_capture.py running?)")
-                    time.sleep(1.0)
+                    cap.release()
+                    time.sleep(0.5)
+                    cap = cv.VideoCapture(gst_in, cv.CAP_GSTREAMER)
                     continue # Keep trying if the stream drops for a microsecond
                 print(cap)
                 
@@ -57,7 +64,7 @@ def inference_node():
                     source=frame, 
                     device=device, 
                     verbose=False, 
-                    quantize=16
+                    quantize="fp16"
                 )
                 annotated_frame = results[0].plot()
                 print(annotated_frame)
