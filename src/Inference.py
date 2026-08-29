@@ -56,7 +56,7 @@ def inference_node():
                     time.sleep(0.5)
                     cap = cv.VideoCapture(gst_in, cv.CAP_GSTREAMER)
                     continue # Keep trying if the stream drops for a microsecond
-                print(cap)
+                # print(cap)
                 
                 # Run YOLO Inference
                 # print("Inference running...)")
@@ -78,8 +78,8 @@ def inference_node():
                     fps_display = frame_count / elapsed_time
                     frame_count = 0
                     last_time = current_time
-                    print(f"Inference FPS: {fps_display:.2f}")
 
+                print(f"Inference FPS: {fps_display:.2f}")
                 fps_text = f"FPS: {fps_display:.2f}"
                 cv.putText(annotated_frame, fps_text, (10, 30), cv.FONT_HERSHEY_COMPLEX_SMALL, 1, (235, 150, 0), 2, cv.LINE_AA)
 
