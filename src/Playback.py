@@ -8,13 +8,13 @@ def playback_node():
     # unpack network data (rtpjpegdepay) -> decompress (jpegdec) -> 
     # format for OpenCV (videoconvert BGR) -> drop into Python (appsink)
     gst_in = (
-        "udpsrc port=5001 caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)JPEG, payload=(int)26\" ! "
+        "udpsrc port=5000 caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)JPEG, payload=(int)26\" ! "
         "rtpjpegdepay ! jpegdec ! videoconvert ! "
         "video/x-raw, format=BGR ! "
         "appsink drop=true sync=false"
     )
     
-    print("Waiting for video stream on Port 5001...")
+    print("Waiting for video stream on Port 5000...")
     cap = cv.VideoCapture(gst_in, cv.CAP_GSTREAMER)
 
     if not cap.isOpened():
@@ -28,7 +28,7 @@ def playback_node():
             ret, frame = cap.read()
             if not ret:
                 # If no data is arriving, wait and try again (prevents silent infinite looping)
-                print("Waiting for data... (Is 1_capture.py running?)")
+                print("Waiting for data... (Is Capture.py running?)")
                 cv.waitKey(1000)
                 continue
 
