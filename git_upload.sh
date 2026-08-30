@@ -1,4 +1,4 @@
 git add .;
 git status;
-git commit -m "The License";
+git commit -m "...";
 git push -u origin main
