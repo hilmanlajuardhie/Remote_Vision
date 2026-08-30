@@ -85,4 +85,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤ by [PAPA](https://github.com/hilmanlajuardhie)
+Made with ❤ by [JIAR](https://github.com/hilmanlajuardhie)
