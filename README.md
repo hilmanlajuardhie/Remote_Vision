@@ -49,6 +49,11 @@ Activate the Virtual Environtment (.venv)
 Source .venv/bin/Activate
 ```
 
+Run the System Check
+```bash
+python3 Sys_Check.py
+```
+
 Run the Capture program
 ```bash
 python3 Capture.py
