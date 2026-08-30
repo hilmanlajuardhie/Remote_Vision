@@ -39,9 +39,9 @@ def capture_inference_node():
 
     # 3. Initialize Sender Pipeline (Broadcasting straight to Port 5000)
     gst_out = (
-        "appsrc ! "
+        "appsrc is-live=true do-timestamp=true ! "
         "videoconvert ! video/x-raw, format=I420 ! "
-        "jpegenc ! rtpjpegpay ! "
+        "jpegenc quality=85 ! rtpjpegpay ! "
         "udpsink host=127.0.0.1 port=5000 sync=false"
     )
     out = cv.VideoWriter(gst_out, cv.CAP_GSTREAMER, 0, fps, (width, height))

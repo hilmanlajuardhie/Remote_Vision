@@ -8,10 +8,11 @@ def playback_node():
     # unpack network data (rtpjpegdepay) -> decompress (jpegdec) -> 
     # format for OpenCV (videoconvert BGR) -> drop into Python (appsink)
     gst_in = (
-        "udpsrc port=5000 caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)JPEG, payload=(int)26\" ! "
+        "udpsrc port=5000 buffer-size=524288 "
+        "caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)JPEG, payload=(int)26\" ! "
         "rtpjpegdepay ! jpegdec ! videoconvert ! "
         "video/x-raw, format=BGR ! "
-        "appsink drop=true sync=false"
+        "appsink drop=true max-buffers=1 sync=false"
     )
     
     print("Waiting for video stream on Port 5000...")
