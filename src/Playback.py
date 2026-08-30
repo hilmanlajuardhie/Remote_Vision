@@ -3,10 +3,6 @@ import cv2 as cv
 def playback_node():
     print("Starting Playback node...")
 
-    # Receiver Pipeline:
-    # Listen on port 5000 (udpsrc) -> declare incoming format (application/x-rtp...) -> 
-    # unpack network data (rtpjpegdepay) -> decompress (jpegdec) -> 
-    # format for OpenCV (videoconvert BGR) -> drop into Python (appsink)
     gst_in = (
         "udpsrc port=5000 buffer-size=524288 "
         "caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)JPEG, payload=(int)26\" ! "
@@ -22,17 +18,30 @@ def playback_node():
         print("Error: Could not open the GStreamer receiver pipeline.")
         return
 
-    print("Stream connected! Press 'q' in the video window to quit.")
+    max_retries = 3
+    retry_count = 0
+    stream_connected = False
 
     try:
         while True:
             ret, frame = cap.read()
             if not ret:
-                # If no data is arriving, wait and try again (prevents silent infinite looping)
-                print("Waiting for data... (Is Capture.py running?)")
+                retry_count += 1
+                print(f"Warning: No data on port 5000 ({retry_count}/{max_retries})...")
+
+                if retry_count >= max_retries:
+                    print("Error: No data stream detected on port 5000 after 3 attempts. Terminating program.")
+                    break
+
                 cv.waitKey(1000)
                 continue
+            retry_count = 0
 
+            if not stream_connected:
+                print("Stream connected!")
+                print("Press 'q' in the video window to quit.")
+                stream_connected = True
+            
             cv.imshow("Live Stream Playback", frame)
 
             # Break the loop if the user presses 'q'
@@ -44,6 +53,7 @@ def playback_node():
     finally:
         cap.release()
         cv.destroyAllWindows()
+        print("Resources released. Program closed.")
 
 if __name__ == "__main__":
     playback_node()
