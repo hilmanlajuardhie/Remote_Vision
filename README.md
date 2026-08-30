@@ -16,6 +16,7 @@ The system captures video streams via V4L2, executes hardware-accelerated **Ultr
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Status](#status)
 - [Contributing](#donate)
 - [License](#license)
 
@@ -64,6 +65,11 @@ Run the Playback program in **Terminal 2**
 python3 Playback.py
 ```
 
+## Status
+
+- Local Network at 127.0.0.1
+- Ultralytics Train Yolo v11.
+- Basic window Pop-up for stream playback.
 
 ## Donate
 
