@@ -54,12 +54,12 @@ Run the System Check
 python3 Sys_Check.py
 ```
 
-Run the Capture program
+Run the Capture program in **Terminal 1**
 ```bash
 python3 Capture.py
 ```
 
-Run the Playback program
+Run the Playback program in **Terminal 2**
 ```bash
 python3 Playback.py
 ```
