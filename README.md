@@ -1,6 +1,8 @@
 # Remote_Vision: Real-Time Edge Vision & Streaming Pipeline
 
-A high-performance, decoupled remote computer vision pipeline designed for real-time edge processing and low-latency network broadcasting.   The system captures video streams via V4L2, executes hardware-accelerated **Ultralytics YOLO11** object detection with CUDA FP16 quantization, burn-in FPS telemetry, and packages/broadcasts the annotated stream over custom **GStreamer RTP/UDP** pipelines to a lightweight, decoupled client playback node.
+A high-performance, decoupled remote computer vision pipeline designed for real-time edge processing and low-latency network broadcasting.   
+
+The system captures video streams via V4L2, executes hardware-accelerated **Ultralytics YOLO11** object detection with CUDA FP16 quantization, burn-in FPS telemetry, and packages/broadcasts the annotated stream over custom **GStreamer RTP/UDP** pipelines to a lightweight, decoupled client playback node.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
 
@@ -30,13 +32,23 @@ A high-performance, decoupled remote computer vision pipeline designed for real-
 ```bash
 git clone https://github.com/PAPA/remote_vision:-real-time-edge-vision-&-streaming-pipeline.git
 cd remote_vision:-real-time-edge-vision-&-streaming-pipeline
-Source .venv/bin/Activate,
 ```
 
 ## Usage
 
+Activate the Virtual Environtment (.venv)
 ```bash
-npm start
+Source .venv/bin/Activate
+```
+
+Run the Capture program
+```bash
+python3 Capture.py
+```
+
+Run the Playback program
+```bash
+python3 Playback.py
 ```
 
 Describe how to use the project here.
@@ -57,4 +69,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤ by [PAPA](https://github.com/PAPA)
+Made with ❤ by [PAPA](https://github.com/hilmanlajuardhie)
