@@ -17,7 +17,7 @@ def print_status(status, message):
     elif status == "WARN":
         print(f"[{YELLOW}WARN{RESET}] {message}")
 
-def check_all_dependencies():
+def check_cv_dependencies():
     print("========================================")
     print("   Streaming Project Dependency Check   ")
     print("========================================\n")
@@ -89,4 +89,4 @@ def check_all_dependencies():
     print("Diagnosis Complete.")
 
 if __name__ == "__main__":
-    check_all_dependencies()
+    check_cv_dependencies()
